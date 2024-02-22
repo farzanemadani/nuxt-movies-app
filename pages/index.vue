@@ -1,48 +1,86 @@
 <template>
-  <div class="flex flex-col py-10">
-    <div>
-      <h2 class="text-2xl font-bold text-center">Nuxt Movies App</h2>
+  <div class="flex flex-col">
+    <HeroBanner/>
+    <div class="d-flex mx-auto">
+      <SearchBox v-model="searchTerm"></SearchBox>
+      <div v-if="isFetching" class="loader"></div>
     </div>
-    <div class="flex justify-center items-center h-32">
-      <input
-        class="px-2 py-1 border border-grey-800 rounded-md min-w-64"
-        v-model="searchTerm"
-        type="text"
-        placeholder="Search..."
-      />
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 
-    xl:grid-cols-5 self-center gap-x-10 gap-y-10 mb-10">
-      <div v-for="movie in data?.results">
-        <MovieCard :movie="movie  "></MovieCard>
-      </div>
-    </div>
-    <div v-if="data?.results.length"  class="flex justify-center">
-      <button v-if="!disabledPrevious" @click="page--" class="px-4 py-2 text-m border rounded-lg">Previos</button>
-      <div class="px-4 py-2 text-m border rounded-lg mx-3">{{ page }}</div>
-      <button v-if="!disabledNext" @click="page++" class="px-4 py-2 text-m border rounded-lg">Next</button>
-    </div>
+    <MovieList class="mt-10" :movies="data?.results"></MovieList>
+    <Pagination
+      class="mb-6"
+      v-if="data?.results.length"
+      :disabled-previous="disabledPrevious"
+      :disabled-next="disabledNext"
+      :page="page"
+      @previousPage="previousPage"
+      @nextPage="nextPage"
+    ></Pagination>
   </div>
 </template>
 <script setup lang="ts">
-import type { APIResponse } from "~~/types/APIResponse";
-const searchTerm = ref("");
+import type { APIResponse } from '~~/types/APIResponse';
+const searchTerm = ref('');
 const page = ref(1);
 
-const debouncedSearchTerm = refDebounced(searchTerm,700);
 
-const url = computed(()=>{
-  return `api/movies/search?query=${debouncedSearchTerm.value}&page=${page.value}`
-})
+const debouncedSearchTerm = refDebounced(searchTerm, 700);
 
-const { data } = await useFetch<APIResponse>(url);
+const url = computed(() => {
+  return `api/movies/search?query=${debouncedSearchTerm.value}&page=${page.value}`;
+});
+
+const { data, pending: isFetching } = await useFetch<APIResponse>(url);
 
 // Disable pagination depending on first or last page
 const disabledPrevious = computed(() => {
-    return page.value === 1;
+  return page.value === 1;
 });
 
 const disabledNext = computed(() => {
-    return page.value + 1 === data.value?.total_pages;
-})
+  return page.value === data.value?.total_pages;
+});
+function previousPage() {
+  if (!disabledPrevious.value) {
+    page.value--;
+  }
+}
+
+function nextPage() {
+  if (!disabledNext.value) {
+    page.value++;
+  }
+}
 </script>
+<style scoped>
+
+.loader {
+  /* Make the element a circle with a blue border */
+  width: 30px;
+  height: 30px;
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
+  border-radius: 50%;
+
+  /* Center the element horizontally and vertically */
+  position: absolute;
+ 
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Apply a keyframe animation to make the element spin */
+  animation: spin 2s linear infinite;
+}
+
+/* Define the keyframes for the animation */
+@keyframes spin {
+  /* Start from 0 degrees */
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  /* End at 360 degrees */
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+</style>
