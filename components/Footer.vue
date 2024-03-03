@@ -4,9 +4,8 @@
       <div v-for="item in footerItems" :key="item.id" class="flex items-center">
         <!-- Bind the item attributes and values to the HTML elements -->
         <a :href="item.url" class="mr-2">
-          <img :src="item.icon" :alt="item.name" class="w-8 h-8" />
+          {{ item.name }}
         </a>
-        <span>{{ item.name }}</span>
       </div>
       <!-- Render the slot content -->
       <slot></slot>

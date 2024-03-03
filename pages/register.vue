@@ -19,7 +19,7 @@
                     />
                 </div>
                 </div>
-                <div class="control min-w-64">
+                <div class="control min-w-67">
                 <button type="submit" class="w-full btn bg-blue-500 mt-3 border rounded-md px-3 py-2 w-full">Register</button>
                 </div>
             </form> 
