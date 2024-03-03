@@ -28,8 +28,6 @@ This application uses the following additional packages:
 - Vue Router: The official router for Vue.js.
 
 ## Form Builder Design Pattern
-
-### Usage Example
 To incorporate the Form Builder Design Pattern into your Nuxt Movies App, follow these steps:
 
 1. Create a Form Builder Class:
