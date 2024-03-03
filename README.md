@@ -26,3 +26,50 @@ This application uses the following additional packages:
 
 - Nuxt WindiCSS: A utility-first CSS framework for rapid UI development.
 - Vue Router: The official router for Vue.js.
+
+## Form Builder Design Pattern
+
+### Usage Example
+To incorporate the Form Builder Design Pattern into your Nuxt Movies App, follow these steps:
+
+- Create a Form Builder Class:
+    - Design a class (e.g., InputFieldBuilder) that allows dynamic construction of form fields
+    - Implement methods for setting labels, names, types, and initial values.
+
+- Usage Example:
+    - Import the InputFieldBuilder class into your components.
+
+```
+import InputFieldBuilder  from "~/builder/InputFieldBuilder";
+const inputField = ref(new InputFieldBuilder());
+```
+
+    - Create an instance of the builder.
+
+```
+const inputField = ref(new InputFieldBuilder());
+```
+
+    - Chain methods to configure your form fields (e.g., username, email, password).
+
+```
+inputField
+  .setLabel('Username')
+  .setName('username')
+  .setType('input')
+  .setValue('')
+  .build();
+
+inputField
+  .setLabel('Email')
+  .setName('email')
+  .setType('input')
+  .setValue('')
+  .build();
+```
+    - Retrieve the built fields as an array.
+
+```
+const fields = inputField.fields;
+```
+
